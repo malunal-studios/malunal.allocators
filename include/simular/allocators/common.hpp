@@ -3,7 +3,12 @@
 /// @author John Christman sorakatadzuma@gmail.com
 /// @copyright 2024 Simular Technologies, LLC.
 #pragma once
+#include <cassert>
 #include <cstdint>
+#include <cstring>
+#include <functional>
+#include <memory_resource>
+
 
 #if (defined(linux)     || \
      defined(__linux)   || \

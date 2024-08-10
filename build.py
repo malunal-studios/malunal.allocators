@@ -45,22 +45,34 @@ parser.add_argument(
     help="Tells CMake to disable the compilation of the tests for the build."
 )
 
+parser.add_argument(
+    "--include_example",
+    default=False,
+    action="store_true",
+    dest="example",
+    required=False,
+    help="Configures the build to include the example."
+)
+
 clargs = parser.parse_args()
 
 arguments: [str] = []
-if (clargs.configure == True):
+if clargs.configure == True:
     build_type: str = "Debug"
     cmake_options: [str] = [
         "cmake", "-E", "env", "CLICOLOR_FORCE=1",
         "cmake", "-G", "\"Unix Makefiles\""
     ];
     
-    if (clargs.release == True):
+    if clargs.release == True:
         build_type = "Release"
 
     cmake_options.append(f"-DCMAKE_BUILD_TYPE={build_type}")
-    if (clargs.enable_tests == True):
-        cmake_options.append(f"-DSIMULAR_ALLOCATORS_BUILD_TESTS=ON")
+    if clargs.enable_tests == True:
+        cmake_options.append("-DSIMULAR_ALLOCATORS_BUILD_TESTS=ON")
+
+    if clargs.example == True:
+        cmake_options.append("-DSIMULAR_ALLOCATORS_BUILD_EXAMPLE=ON")
 
     arguments.extend(cmake_options)
     arguments.extend(["-S", ".", "-B", "build"])

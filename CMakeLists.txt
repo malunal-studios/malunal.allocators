@@ -9,6 +9,25 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(simular::allocators ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} INTERFACE ${PROJECT_SOURCE_DIR}/include)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(
+        ${PROJECT_NAME}
+        #INTERFACE -fsanitize=address
+        INTERFACE -fanalyzer
+        INTERFACE -fdiagnostics-parseable-fixits
+        INTERFACE -Wanalyzer-double-free
+        INTERFACE -Wanalyzer-null-dereference
+        INTERFACE -Wall
+        INTERFACE -Wextra
+        INTERFACE -Wpedantic
+    )
+    target_link_options(
+        ${PROJECT_NAME}
+        #INTERFACE -fsanitize=address
+        INTERFACE -fanalyzer
+        INTERFACE -fdiagnostics-parseable-fixits
+    )
+endif()
 
 # Do you want to build the tests?
 option(SIMULAR_ALLOCATORS_BUILD_TESTS "Build tests" OFF)
@@ -25,4 +44,9 @@ if(SIMULAR_ALLOCATORS_BUILD_TESTS)
     enable_testing()
     include(GoogleTest)
     add_subdirectory(tests)
+endif()
+
+option(SIMULAR_ALLOCATORS_BUILD_EXAMPLE "Build example" OFF)
+if(SIMULAR_ALLOCATORS_BUILD_EXAMPLE)
+    add_subdirectory(example)
 endif()
