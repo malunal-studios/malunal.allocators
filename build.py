@@ -46,7 +46,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--include_example",
+    "--include-example",
     default=False,
     action="store_true",
     dest="example",
