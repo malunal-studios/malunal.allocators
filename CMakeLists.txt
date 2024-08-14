@@ -9,21 +9,26 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(simular::allocators ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} INTERFACE ${PROJECT_SOURCE_DIR}/include)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+target_compile_options(
+    ${PROJECT_NAME}
+    INTERFACE -Wall
+    INTERFACE -Wextra
+    INTERFACE -Wpedantic
+)
+
+option(SIMULAR_ALLOCATORS_ENABLE_DIAGNOSTICS "Enable address sanitizer and static analyzer" OFF)
+if(SIMULAR_ALLOCATORS_ENABLE_DIAGNOSTICS)
     target_compile_options(
         ${PROJECT_NAME}
-        #INTERFACE -fsanitize=address
+        INTERFACE -fsanitize=address
         INTERFACE -fanalyzer
         INTERFACE -fdiagnostics-parseable-fixits
         INTERFACE -Wanalyzer-double-free
         INTERFACE -Wanalyzer-null-dereference
-        INTERFACE -Wall
-        INTERFACE -Wextra
-        INTERFACE -Wpedantic
     )
     target_link_options(
         ${PROJECT_NAME}
-        #INTERFACE -fsanitize=address
+        INTERFACE -fsanitize=address
         INTERFACE -fanalyzer
         INTERFACE -fdiagnostics-parseable-fixits
     )
@@ -32,6 +37,8 @@ endif()
 # Do you want to build the tests?
 option(SIMULAR_ALLOCATORS_BUILD_TESTS "Build tests" OFF)
 if(SIMULAR_ALLOCATORS_BUILD_TESTS)
+    message(STATUS "Tests compilation enabled for Simular.Allocators")
+    message(STATUS "Fetching Google Test library...")
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
@@ -40,10 +47,38 @@ if(SIMULAR_ALLOCATORS_BUILD_TESTS)
     )
     set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
+    message(STATUS "Fetching Google Test library - done")
 
     enable_testing()
     include(GoogleTest)
     add_subdirectory(tests)
+endif()
+
+
+option(SIMULAR_ALLOCATORS_BUILD_BENCHMARKS "Build benchmarks" OFF)
+if(SIMULAR_ALLOCATORS_BUILD_BENCHMARKS)
+    # Benchmarks should always run in release mode so capture old build type,
+    # configure the benchmarks then reset the build type after.
+    set(OLD_BUILD_TYPE ${CMAKE_BUILD_TYPE})
+    set(CMAKE_BUILD_TYPE "Release")
+
+    message(STATUS "Benchmarks compilation enabled for Simular.Allocators")
+    message(STATUS "Fetching Google Benchmark library...")
+    FetchContent_Declare(
+        googlebenchmark
+        GIT_REPOSITORY https://github.com/google/benchmark.git
+        GIT_TAG        v1.8.5
+        GIT_SHALLOW    ON
+    )
+    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+    set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googlebenchmark)
+    message(STATUS "Fetching Google Benchmark library - done")
+
+    add_subdirectory(benchmarks)
+
+    # Reset build type.
+    set(CMAKE_BUILD_TYPE ${OLD_BUILD_TYPE})
 endif()
 
 option(SIMULAR_ALLOCATORS_BUILD_EXAMPLE "Build example" OFF)

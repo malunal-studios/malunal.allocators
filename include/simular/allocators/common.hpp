@@ -3,11 +3,15 @@
 /// @author John Christman sorakatadzuma@gmail.com
 /// @copyright 2024 Simular Technologies, LLC.
 #pragma once
+#include <algorithm>
 #include <cassert>
+#include <concepts>
 #include <cstdint>
 #include <cstring>
 #include <functional>
+#include <memory>
 #include <memory_resource>
+#include <type_traits>
 
 
 #if (defined(linux)     || \
@@ -25,5 +29,24 @@
 #endif /* Platform check */
 
 
-namespace simular::allocators {
-} // namespace simular::allocators
+namespace simular::allocators::detail {
+
+/// @brief   Calculates the forward adjustment for a given pointer and the given
+///          alignment value.
+/// @details The forward adjustment defines how much to add to a given pointer
+///          to align that address on a byte boundery of alignment. Any adjusted
+///          address should produce zero when taking the modulus of that address
+///          and its proposed alignment.
+/// @param   ptr The pointer to forward adjust.
+/// @param   aligment The alignment to adjust to.
+/// @returns The amount needed to adjust the address to the byte boundary of
+///          alignment.
+inline std::size_t
+calc_fwd_adjust(uintptr_t ptr, size_t alignment) noexcept {
+    const auto iptr    = reinterpret_cast<uintptr_t>(ptr);
+    const auto alignm1 = alignment - 1u;
+    const auto aligned = (iptr + alignm1) & ~alignm1;
+    return aligned - iptr;
+}
+
+} // namespace simular::allocators::detail

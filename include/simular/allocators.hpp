@@ -4,4 +4,6 @@
 /// @copyright 2024 Simular Technologies, LLC.
 #pragma once
 #include "allocators/common.hpp"
+#include "allocators/linear.hpp"
+#include "allocators/scratch.hpp"
 #include "allocators/arena.hpp"

@@ -37,12 +37,30 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "--enable-diagnostics",
+    default=False,
+    action="store_true",
+    dest="enable_diagnostics",
+    required=False,
+    help="Tells CMake to include the address sanitizer and static analyzer flags to the build."
+)
+
+parser.add_argument(
     "--no-tests",
     default=True,
     action="store_false",
     dest="enable_tests",
     required=False,
     help="Tells CMake to disable the compilation of the tests for the build."
+)
+
+parser.add_argument(
+    "--no-benchmarks",
+    default=True,
+    action="store_false",
+    dest="enable_benchmarks",
+    required=False,
+    help="Tells CMake to disable the compilation of the benchmarks for the build."
 )
 
 parser.add_argument(
@@ -68,8 +86,14 @@ if clargs.configure == True:
         build_type = "Release"
 
     cmake_options.append(f"-DCMAKE_BUILD_TYPE={build_type}")
+    if clargs.enable_diagnostics == True:
+        cmake_options.append("-DSIMULAR_ALLOCATORS_ENABLE_DIAGNOSTICS=ON")
+
     if clargs.enable_tests == True:
         cmake_options.append("-DSIMULAR_ALLOCATORS_BUILD_TESTS=ON")
+
+    if clargs.enable_benchmarks == True:
+        cmake_options.append("-DSIMULAR_ALLOCATORS_BUILD_BENCHMARKS=ON")
 
     if clargs.example == True:
         cmake_options.append("-DSIMULAR_ALLOCATORS_BUILD_EXAMPLE=ON")

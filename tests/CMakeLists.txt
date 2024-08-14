@@ -10,4 +10,4 @@ macro(create_test TESTNAME TESTFILE)
 endmacro()
 
 # Create tests here.
-create_test(mem.arena.test arena_tests.cpp)
+create_test(mem.arena.test arena.cpp)
