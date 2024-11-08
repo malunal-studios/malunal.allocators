@@ -1,13 +1,13 @@
 #include <iostream>
 #include <vector>
-#include <simular/allocators.hpp>
+#include <malunal/allocators.hpp>
 
-using namespace simular::allocators;
+using namespace malunal::allocators;
 
 template<typename T>
 static std::pmr::vector<T>
 make_vector() noexcept {
-    using simular::allocators::arena_allocator_instance;
+    using malunal::allocators::arena_allocator_instance;
     return std::pmr::vector<T>(arena_allocator_instance());
 }
 

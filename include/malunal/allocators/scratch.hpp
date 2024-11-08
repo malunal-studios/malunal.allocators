@@ -1,11 +1,11 @@
 /// @file   scratch.hpp
 /// @brief  Provides the scratch buffer resource implementation.
 /// @author John Christman sorakatadzuma@gmail.com
-/// @copyright 2024 Simular Technologies, LLC.
+/// @copyright 2024 Malunal Studios, LLC.
 #pragma once
 
 
-namespace simular::allocators {
+namespace malunal::allocators {
 
 /// @brief   A scratch buffer resource is a memory resource which is created
 ///          from an existing piece of memory, either stack or heap, that can
@@ -154,4 +154,4 @@ private:
 };
 
 
-} // namespace simular::allocators
+} // namespace malunal::allocators

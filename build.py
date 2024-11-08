@@ -87,16 +87,16 @@ if clargs.configure == True:
 
     cmake_options.append(f"-DCMAKE_BUILD_TYPE={build_type}")
     if clargs.enable_diagnostics == True:
-        cmake_options.append("-DSIMULAR_ALLOCATORS_ENABLE_DIAGNOSTICS=ON")
+        cmake_options.append("-DMALUNAL_ALLOCATORS_ENABLE_DIAGNOSTICS=ON")
 
     if clargs.enable_tests == True:
-        cmake_options.append("-DSIMULAR_ALLOCATORS_BUILD_TESTS=ON")
+        cmake_options.append("-DMALUNAL_ALLOCATORS_BUILD_TESTS=ON")
 
     if clargs.enable_benchmarks == True:
-        cmake_options.append("-DSIMULAR_ALLOCATORS_BUILD_BENCHMARKS=ON")
+        cmake_options.append("-DMALUNAL_ALLOCATORS_BUILD_BENCHMARKS=ON")
 
     if clargs.example == True:
-        cmake_options.append("-DSIMULAR_ALLOCATORS_BUILD_EXAMPLE=ON")
+        cmake_options.append("-DMALUNAL_ALLOCATORS_BUILD_EXAMPLE=ON")
 
     arguments.extend(cmake_options)
     arguments.extend(["-S", ".", "-B", "build"])

@@ -1,7 +1,7 @@
-#define SIMULAR_ALLOCATORS_REGION_MAXIMUM_ALLOCATION 0x00FF'FFF8
-#define SIMULAR_ALLOCATORS_ARENA_DEFAULT_CAPACITY    16
+#define MALUNAL_ALLOCATORS_REGION_MAXIMUM_ALLOCATION 0x00FF'FFF8
+#define MALUNAL_ALLOCATORS_ARENA_DEFAULT_CAPACITY    16
 #include <benchmark/benchmark.h>
-#include <simular/allocators.hpp>
+#include <malunal/allocators.hpp>
 
 static void
 BM_StandardNewDeleteAllocatorInsert(benchmark::State& state) {
@@ -24,8 +24,8 @@ BM_StandardUnsynchronizedPoolInsert(benchmark::State& state) {
 }
 
 static void
-BM_SimularAllocatorsArenaMemoryInsert(benchmark::State& state) {
-    using namespace simular::allocators;
+BM_MalunalAllocatorsArenaMemoryInsert(benchmark::State& state) {
+    using namespace malunal::allocators;
     arena_memory_resource arena;
     std::pmr::vector<int> myvec(&arena);
 
@@ -36,4 +36,4 @@ BM_SimularAllocatorsArenaMemoryInsert(benchmark::State& state) {
 
 BENCHMARK(BM_StandardNewDeleteAllocatorInsert)->Iterations(1000000)->Threads(1);
 BENCHMARK(BM_StandardUnsynchronizedPoolInsert)->Iterations(1000000)->Threads(1);
-BENCHMARK(BM_SimularAllocatorsArenaMemoryInsert)->Iterations(1000000)->Threads(1);
+BENCHMARK(BM_MalunalAllocatorsArenaMemoryInsert)->Iterations(1000000)->Threads(1);

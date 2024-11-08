@@ -1,7 +1,7 @@
 /// @file   common.hpp
 /// @brief  Provides common utilities for all of the allocators.
 /// @author John Christman sorakatadzuma@gmail.com
-/// @copyright 2024 Simular Technologies, LLC.
+/// @copyright 2024 Malunal Studios, LLC.
 #pragma once
 #include <algorithm>
 #include <cassert>
@@ -19,17 +19,17 @@
      defined(__linux__) || \
      defined(__GNU__)   || \
      defined(__GLIBC__))
-#  define SIMULAR_ALLOCATORS_PLATFORM_POSIX 1
-#  define SIMULAR_ALLOCATORS_PLATFORM_WIN32 0
+#  define MALUNAL_ALLOCATORS_PLATFORM_POSIX 1
+#  define MALUNAL_ALLOCATORS_PLATFORM_WIN32 0
 #elif defined(_WIN32)    || \
       defined(__WIN32__) || \
       defined(WIN32)
-#  define SIMULAR_ALLOCATORS_PLATFORM_POSIX 0
-#  define SIMULAR_ALLOCATORS_PLATFORM_WIN32 1
+#  define MALUNAL_ALLOCATORS_PLATFORM_POSIX 0
+#  define MALUNAL_ALLOCATORS_PLATFORM_WIN32 1
 #endif /* Platform check */
 
 
-namespace simular::allocators::detail {
+namespace malunal::allocators::detail {
 
 /// @brief   Calculates the forward adjustment for a given pointer and the given
 ///          alignment value.
@@ -49,4 +49,4 @@ calc_fwd_adjust(uintptr_t ptr, size_t alignment) noexcept {
     return aligned - iptr;
 }
 
-} // namespace simular::allocators::detail
+} // namespace malunal::allocators::detail

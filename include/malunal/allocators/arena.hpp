@@ -1,13 +1,13 @@
 /// @file   arena.hpp
 /// @brief  Provides the arena memory resource declaration.
 /// @author John Christman sorakatadzuma@gmail.com
-/// @copyright 2024 Simular Technologies, LLC.
+/// @copyright 2024 Malunal Studios, LLC.
 #pragma once
 
 
-#if SIMULAR_ALLOCATORS_PLATFORM_POSIX
+#if MALUNAL_ALLOCATORS_PLATFORM_POSIX
 #include <sys/mman.h>
-#elif SIMULAR_ALLOCATORS_PLATFORM_WIN32
+#elif MALUNAL_ALLOCATORS_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN 1
 #define NOMINMAX 1
 #include <windows.h>
@@ -15,35 +15,35 @@
 
 
 // Set maximum allocation size if not yet set.
-#ifndef SIMULAR_ALLOCATORS_REGION_MAXIMUM_ALLOCATION
-/// @def     SIMULAR_ALLOCATORS_REGION_MAXIMUM_ALLOCATION
+#ifndef MALUNAL_ALLOCATORS_REGION_MAXIMUM_ALLOCATION
+/// @def     MALUNAL_ALLOCATORS_REGION_MAXIMUM_ALLOCATION
 /// @brief   The maximum allowed allocation size for the arena memory resource.
 /// @details This is modifiable by you the developer. It configures how much the
 ///          arena memory resource can allocate in one allocation call. The value
 ///          must be between 1 and the 64-bit max.
-#define SIMULAR_ALLOCATORS_REGION_MAXIMUM_ALLOCATION 0x003F'FFF8
-#elif SIMULAR_ALLOCATORS_REGION_MAXIMUM_ALLOCATION < 0x1000 || \
-      SIMULAR_ALLOCATORS_REGION_MAXIMUM_ALLOCATION > INT64_MAX
+#define MALUNAL_ALLOCATORS_REGION_MAXIMUM_ALLOCATION 0x003F'FFF8
+#elif MALUNAL_ALLOCATORS_REGION_MAXIMUM_ALLOCATION < 0x1000 || \
+      MALUNAL_ALLOCATORS_REGION_MAXIMUM_ALLOCATION > INT64_MAX
 #  error Maximum allocation size must be > 0 and < INT64_MAX
-#endif /* SIMULAR_ALLOCATORS_REGION_MAXIMUM_ALLOCATION */
+#endif /* MALUNAL_ALLOCATORS_REGION_MAXIMUM_ALLOCATION */
 
 // Set default arena capacity if not yet set.
-#ifndef SIMULAR_ALLOCATORS_ARENA_DEFAULT_CAPACITY
-/// @def     SIMULAR_ALLOCATORS_ARENA_DEFAULT_CAPACITY
+#ifndef MALUNAL_ALLOCATORS_ARENA_DEFAULT_CAPACITY
+/// @def     MALUNAL_ALLOCATORS_ARENA_DEFAULT_CAPACITY
 /// @brief   A default capacity for virtual memory allocated by this library.
 /// @details This is modifiable by you the developer. It configures how much
 ///          memory the arena memory resource can allocate per region it stores.
 ///          There is no upper bounds to how much memory can be allocated for
 ///          a region, but there is a lower bounds of 1.
 /// @remarks This is in mebibytes.
-#define SIMULAR_ALLOCATORS_ARENA_DEFAULT_CAPACITY 4
-#elif SIMULAR_ALLOCATORS_ARENA_DEFAULT_CAPACITY < 1
+#define MALUNAL_ALLOCATORS_ARENA_DEFAULT_CAPACITY 4
+#elif MALUNAL_ALLOCATORS_ARENA_DEFAULT_CAPACITY < 1
 #  error Region default capacity must be greater than 1
-#endif /* SIMULAR_ALLOCATORS_ARENA_DEFAULT_CAPACITY */
+#endif /* MALUNAL_ALLOCATORS_ARENA_DEFAULT_CAPACITY */
 
 // Set free list size if not yet set.
-#ifndef SIMULAR_ALLOCATORS_ARENA_FREE_LIST_SIZE
-/// @def     SIMULAR_ALLOCATORS_ARENA_FREE_LIST_SIZE
+#ifndef MALUNAL_ALLOCATORS_ARENA_FREE_LIST_SIZE
+/// @def     MALUNAL_ALLOCATORS_ARENA_FREE_LIST_SIZE
 /// @brief   The allowed size for the arena memory resource free list.
 /// @details This is modifiable by you the developer. It configures how many
 ///          free list nodes can be stored within the memory of the arena's
@@ -58,32 +58,32 @@
 ///          cause for it to reallocate and wander is a consequence of using
 ///          the standard library `vector` as it will allocate a new block
 ///          before deallocating the previous.
-#define SIMULAR_ALLOCATORS_ARENA_FREE_LIST_SIZE 32
-#elif SIMULAR_ALLOCATORS_ARENA_FREE_LIST_SIZE < 8 || \
-      SIMULAR_ALLOCATORS_ARENA_FREE_LIST_SIZE > 256
+#define MALUNAL_ALLOCATORS_ARENA_FREE_LIST_SIZE 32
+#elif MALUNAL_ALLOCATORS_ARENA_FREE_LIST_SIZE < 8 || \
+      MALUNAL_ALLOCATORS_ARENA_FREE_LIST_SIZE > 256
 #  error Default free count must be > 8 and < 256
 #endif
 
 
-namespace simular::allocators {
+namespace malunal::allocators {
 
 /// @brief   The maximum size of an allocation into any given region.
 /// @details Regions of the vmem will be the size of this since one whole
 ///          allocation can fit into it.
 inline static constexpr size_t
-k_max_alloc_size = SIMULAR_ALLOCATORS_REGION_MAXIMUM_ALLOCATION;
+k_max_alloc_size = MALUNAL_ALLOCATORS_REGION_MAXIMUM_ALLOCATION;
 
 /// @brief   The default capacity of the arena memory resource.
 /// @details This is controlled by a macro which you, the developer, can
 ///          adjust to your needs.
 inline static constexpr size_t
-k_default_capacity = SIMULAR_ALLOCATORS_ARENA_DEFAULT_CAPACITY;
+k_default_capacity = MALUNAL_ALLOCATORS_ARENA_DEFAULT_CAPACITY;
 
 /// @brief   The default free list size for the arena memory resource.
 /// @details This is controlled by a macro which you, the developer, can
 ///          adjust to your needs.
 inline static constexpr size_t
-k_free_list_size = SIMULAR_ALLOCATORS_ARENA_FREE_LIST_SIZE;
+k_free_list_size = MALUNAL_ALLOCATORS_ARENA_FREE_LIST_SIZE;
 
 
 /// @brief   A memory resource for managing regions of virtual memory acquired
@@ -373,9 +373,9 @@ private:
         if ((*pp_region)->next != nullptr)
             vmem_release(&(*pp_region)->next);
 
-    #if SIMULAR_ALLOCATORS_PLATFORM_WIN32
+    #if MALUNAL_ALLOCATORS_PLATFORM_WIN32
         ::VirtualFree(*pp_region, 0, MEM_RELEASE);
-    #elif SIMULAR_ALLOCATORS_PLATFORM_POSIX
+    #elif MALUNAL_ALLOCATORS_PLATFORM_POSIX
         ::munmap(*pp_region, k_max_alloc_size);
     #endif /* Platform specific code */
 
@@ -386,14 +386,14 @@ private:
 
     void
     vmem_acquire(region** pp_region, size_t capacity) {
-    #if SIMULAR_ALLOCATORS_PLATFORM_WIN32
+    #if MALUNAL_ALLOCATORS_PLATFORM_WIN32
         constexpr int32_t k_memops = MEM_COMMIT | MEM_RESERVE;
         constexpr int32_t k_pageops = PAGE_READWRITE;
         auto ptr = ::VirtualAlloc(0, capacity, k_memops, k_pageops);
         *pp_region = reinterpret_cast<region*>(ptr);
         if (*pp_region == nullptr)
             std::bad_alloc();
-    #elif SIMULAR_ALLOCATORS_PLATFORM_POSIX
+    #elif MALUNAL_ALLOCATORS_PLATFORM_POSIX
         constexpr int32_t k_memops = PROT_READ | PROT_WRITE;
         constexpr int32_t k_memprms = MAP_PRIVATE | MAP_ANONYMOUS;
         const auto min = std::invoke([&capacity] {
@@ -581,4 +581,4 @@ arena_allocator_instance() {
     return &k_arena_memory_resource;
 }
 
-} // namespace simular::allocators
+} // namespace malunal::allocators

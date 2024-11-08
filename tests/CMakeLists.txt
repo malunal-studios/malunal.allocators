@@ -3,7 +3,7 @@ macro(create_test TESTNAME TESTFILE)
     target_link_libraries(
         ${TESTNAME}
         PRIVATE GTest::gtest_main
-        PRIVATE simular::allocators
+        PRIVATE malunal::allocators
     )
 
     gtest_discover_tests(${TESTNAME})

@@ -6,7 +6,7 @@ macro(create_bench TESTNAME TESTFILE)
         PRIVATE benchmark::benchmark_main
 
         # Currently header only, may not be forever
-        PRIVATE simular::allocators
+        PRIVATE malunal::allocators
     )
 endmacro()
 

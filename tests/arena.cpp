@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include <simular/allocators.hpp>
+#include <malunal/allocators.hpp>
 
-using namespace simular::allocators;
+using namespace malunal::allocators;
 
 
 struct test_arena_memory_resource : arena_memory_resource {

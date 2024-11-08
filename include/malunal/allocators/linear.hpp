@@ -1,11 +1,11 @@
 /// @file   linear.hpp
 /// @brief  Provides the linear buffer resource implementation.
 /// @author John Christman sorakatadzuma@gmail.com
-/// @copyright 2024 Simular Technologies, LLC.
+/// @copyright 2024 Malunal Studios, LLC.
 #pragma once
 
 
-namespace simular::allocators {
+namespace malunal::allocators {
 
 /// @brief   A linear buffer resource is a memory resource that linearly
 ///          allocates a provided buffer, pushing a pointer forward everytime
@@ -186,4 +186,4 @@ private:
     size_t count_{0};
 };
 
-} // namespace simular::allocators
+} // namespace malunal::allocators

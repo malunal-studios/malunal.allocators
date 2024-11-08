@@ -1,6 +1,6 @@
-# Simular.Allocators
+# Malunal.Allocators
 
-A header-only collection of allocators which can be used to serve whatever allocation strategies you may need. For our own purposes, it serves as a manner to facilitate the large swaths of allocations and memory managment that we need in our `simular.cherry` project.
+A header-only collection of allocators which can be used to serve whatever allocation strategies you may need. For our own purposes, it serves as a manner to facilitate the large swaths of allocations and memory managment that we need in our `malunal.cherry` project.
 
 ### Requirements
 
@@ -13,14 +13,14 @@ The usage is pretty simple, you will need to use the `std::pmr` containers for t
 ```cpp
 #include <iostream>
 #include <vector>
-#include <simular/allocators.hpp>
+#include <malunal/allocators.hpp>
 
-using namespace simular::allocators;
+using namespace malunal::allocators;
 
 template<typename T>
 static std::pmr::vector<T>
 make_vector() noexcept {
-    using simular::allocators::arena_allocator_instance;
+    using malunal::allocators::arena_allocator_instance;
     return std::pmr::vector<T>(arena_allocator_instance());
 }
 

@@ -1,5 +1,5 @@
 #include <benchmark/benchmark.h>
-#include <simular/allocators.hpp>
+#include <malunal/allocators.hpp>
 
 static void
 BM_StandardNewDeleteAllocatorCreate(benchmark::State& state) {
@@ -17,8 +17,8 @@ BM_StandardUnsynchronizedPoolCreate(benchmark::State& state) {
 }
 
 static void
-BM_SimularAllocatorsArenaMemoryCreate(benchmark::State& state) {
-    using simular::allocators::arena_memory_resource;
+BM_MalunalAllocatorsArenaMemoryCreate(benchmark::State& state) {
+    using malunal::allocators::arena_memory_resource;
     arena_memory_resource arena;
 
     for (auto _ : state)
@@ -27,4 +27,4 @@ BM_SimularAllocatorsArenaMemoryCreate(benchmark::State& state) {
 
 BENCHMARK(BM_StandardNewDeleteAllocatorCreate)->Iterations(1000000)->Threads(1);
 BENCHMARK(BM_StandardUnsynchronizedPoolCreate)->Iterations(1000000)->Threads(1);
-BENCHMARK(BM_SimularAllocatorsArenaMemoryCreate)->Iterations(1000000)->Threads(1);
+BENCHMARK(BM_MalunalAllocatorsArenaMemoryCreate)->Iterations(1000000)->Threads(1);
